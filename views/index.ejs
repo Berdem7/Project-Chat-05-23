@@ -1,0 +1,81 @@
+<link href="/style.css" rel="stylesheet" type="text/css" />
+
+<body>
+  <a href="http://localhost:<%=port%>/allbooksejs"
+    ><button class="allbooksbutton">All Books</button></a
+  >
+
+
+
+
+  <h1>Public Chat</h1>
+  <div class="bookCard">
+    <div class="container">
+        <% chat.map(e=> {%>
+
+      <div class="mainsection">
+        <h4><%= e.user%></h4>
+        <p><%= e.chat%></p>
+    </div>
+
+        <% }) %>
+        <p>
+            <form id="form" method="post" action="/public">
+                <label for="user">Username</label><br />
+                <input type="text" id="user" name="user" /><br />
+                <label for="chat">Chat</label><br />
+                <input type="text" id="chat" name="chat" /><br />
+                <button>Send</button>
+              </form>
+        </p>
+
+
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+  
+    var form = document.getElementById('form');
+    var chat = document.getElementById('chat');
+    var user = document.getElementById('user');
+  
+    // form.addEventListener('submit', function(e) {
+    //     e.preventDefault();
+    //     // console.log("work");
+    //   if (chat.value) {
+    //     socket.on("publicchat",{"user":user, "chat":chat});
+    //     // console.log(input.value);
+    //     input.value = '';
+    // }
+    // });
+
+    socket.on("publicchat",function(msg){
+        console.log(msg);
+        socket.emit("publicchat2","update")
+    })
+
+    io.connect("http://localhost/3000/public").on("publicchat2",function(msg){
+  $("#form").html(msg)
+})
+
+    socket.emit("publicchat1")
+
+    
+  </script>
+  <script src="http://localhost:3000/chatdata"></script>
+  <script>
+      var previous = null;
+      var current = null;
+      setInterval(function() {
+          $.getJSON("data.json", function(json) {
+              current = JSON.stringify(json);            
+              if (previous && current && previous !== current) {
+                  console.log('refresh');
+                  location.reload();
+              }
+              previous = current;
+          });                       
+      }, 1000); 
+  </script>
+</body>
