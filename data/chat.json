@@ -1,6 +1,1 @@
-{
-  "messages": [
-    { "user": "bat", "chat": "ok" },
-    { "user": "user", "chat": "chat" }
-  ]
-}
+{"messages":[{"user":"bat","chat":"ok"},{"user":"user","chat":"chat"},{"user":"1","chat":"1"},{"user":"2","chat":"2"},{"user":"1","chat":"1"},{"user":"3","chat":"3"},{"user":"4","chat":"4"},{"user":"3","chat":"3"},{"user":"4","chat":"4"},{"user":"1","chat":"2"},{"user":"23","chat":"34"},{"user":"1","chat":"2"},{"user":"23","chat":"34"}]}

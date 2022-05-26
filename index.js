@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 const router = express.Router();
 app.use(express.json());
 const bodyparser = require("body-parser");
@@ -8,24 +13,24 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 const { body, validationResult } = require("express-validator");
 
-const port = 3000;
+const port = 3007;
 const querystring = require("querystring");
-const e = require("express");
+// const e = require("express");
 // const { Socket } = require("socket.io");
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.set("view options", { layout: false });
 
-const http = require("http").Server(app);
-
-const io = require("socket.io")(http); // The port should be different of your HTTP server.
+// const io = require("socket.io")(http); // The port should be different of your HTTP server.
 // var socket = io();
 // const server = require("http").Server(app);
 
-// io.on("connection", (socket) => {
-//   console.log("a user is connected");
-//   socket.emit("chat", JSON.parse(data).messages);
-// });
+io.on("connection", (socket) => {
+  console.log("a user is connected");
+  socket.on("publicchat2", (msg) => {
+    console.log(msg);
+  });
+});
 
 // io.connect("http://localhost/3000/public").on("publicchat2",function(msg){
 //   $
@@ -156,11 +161,15 @@ router.post("/public", (req, res) => {
           console.log(error);
         } else {
           //   io.emit("chat", "update");
-          io.on("connection", (socket) => {
+          // io.emit("publicchat", "ok");
+          io.once("connection", (socket) => {
             console.log("connectedfas");
-            socket.on("publicchat1", function (data) {
-              socket.emit("publicchat", "update");
-            });
+            socket.broadcast.emit("publicchat", "ok");
+            // if (socket) {
+            //   socket.on("publicchat1", function (data) {
+            //     socket.broadcast.emit("publicchat", "update");
+            //   });
+            // }
           });
           //   io.emit("publicchat", "update");
           res.render("index.ejs", { chat: chat.messages, port: port });
@@ -170,5 +179,5 @@ router.post("/public", (req, res) => {
   });
 });
 
-http.listen(port);
-// server.listen(8080);
+// http.listen(port);
+server.listen(port);

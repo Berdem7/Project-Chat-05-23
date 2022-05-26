@@ -52,30 +52,29 @@
 
     socket.on("publicchat",function(msg){
         console.log(msg);
-        socket.emit("publicchat2","update")
+        (function()
+ {
+  if( window.localStorage ){
+    if(!localStorage.getItem('firstReLoad')){
+     localStorage['firstReLoad'] = true;
+     window.location.reload();
+    } else {
+     localStorage.removeItem('firstReLoad');
+    }
+  }
+ })();
+
+        // socket.emit("publicchat2","helloooo")
     })
 
-    io.connect("http://localhost/3000/public").on("publicchat2",function(msg){
-  $("#form").html(msg)
-})
+  //   io.connect("http://localhost/3000/public").on("publicchat2",function(msg){
+  // // $("#form").html(msg) 
+  // console.log("message irlee")
+// })
 
-    socket.emit("publicchat1")
+    // socket.emit("publicchat1")
 
     
   </script>
-  <script src="http://localhost:3000/chatdata"></script>
-  <script>
-      var previous = null;
-      var current = null;
-      setInterval(function() {
-          $.getJSON("data.json", function(json) {
-              current = JSON.stringify(json);            
-              if (previous && current && previous !== current) {
-                  console.log('refresh');
-                  location.reload();
-              }
-              previous = current;
-          });                       
-      }, 1000); 
-  </script>
+
 </body>
